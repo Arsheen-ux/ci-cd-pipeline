@@ -14,6 +14,24 @@ pipeline {
                 echo 'Running unit and integration tests...'
                 // Example: sh 'mvn test'
             }
+            post {
+                success {
+                    emailext (
+                        to: 'arsheenk88@gmail.com',
+                        subject: "Build ${env.BUILD_NUMBER} - Unit and Integration Tests - Success",
+                        body: "Unit and integration tests for Build ${env.BUILD_NUMBER} were successful.",
+                        attachLog: true
+                    )
+                }
+                failure {
+                    emailext (
+                        to: 'arsheenk88@gmail.com',
+                        subject: "Build ${env.BUILD_NUMBER} - Unit and Integration Tests - Failure",
+                        body: "Unit and integration tests for Build ${env.BUILD_NUMBER} failed.",
+                        attachLog: true
+                    )
+                }
+            }
         }
 
         stage('Code Analysis') {
@@ -27,6 +45,24 @@ pipeline {
             steps {
                 echo 'Performing security scan...'
                 // Example: sh 'bandit -r .'
+            }
+            post {
+                success {
+                    emailext (
+                        to: 'arsheenk88@gmail.com',
+                        subject: "Build ${env.BUILD_NUMBER} - Security Scan - Success",
+                        body: "Security scan for Build ${env.BUILD_NUMBER} was successful.",
+                        attachLog: true
+                    )
+                }
+                failure {
+                    emailext (
+                        to: 'arsheenk88@gmail.com',
+                        subject: "Build ${env.BUILD_NUMBER} - Security Scan - Failure",
+                        body: "Security scan for Build ${env.BUILD_NUMBER} failed.",
+                        attachLog: true
+                    )
+                }
             }
         }
 
@@ -56,7 +92,7 @@ pipeline {
         success {
             emailext (
                 to: 'arsheenk88@gmail.com',
-                subject: "Build ${env.BUILD_NUMBER} - Success",
+                subject: "Build ${env.BUILD_NUMBER} - Overall Success",
                 body: "Build ${env.BUILD_NUMBER} was successful.",
                 attachLog: true
             )
@@ -64,7 +100,7 @@ pipeline {
         failure {
             emailext (
                 to: 'arsheenk88@gmail.com',
-                subject: "Build ${env.BUILD_NUMBER} - Failure",
+                subject: "Build ${env.BUILD_NUMBER} - Overall Failure",
                 body: "Build ${env.BUILD_NUMBER} failed.",
                 attachLog: true
             )
